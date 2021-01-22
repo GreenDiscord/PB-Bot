@@ -21,7 +21,13 @@ class BotInfo(commands.Cog, name="Bot Info"):
     """
     Commands that display information about the bot.
     """
-    @commands.command(
+    
+    @commands.group(invoke_without_command=True)
+    async def info(self, ctx):
+        e = discord.Embed(title="Info For The Bot", description="Please Use ```pb help info``` or your servers corresponding prefix for a list of commands")
+        await ctx.send(
+ 
+    @info.command(
         aliases=["up"]
     )
     async def uptime(self, ctx):
@@ -31,7 +37,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
         uptime = datetime.datetime.now() - ctx.bot.start_time
         await ctx.send(f"Bot has been online for **`{humanize.precisedelta(uptime)}`**.")
 
-    @commands.command()
+    @info.command()
     async def ping(self, ctx, accuracy: int = 2):
         """
         Displays the websocket latency and the api response time.
@@ -52,6 +58,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
 
     @commands.command()
     async def botinfo(self, ctx):
+        # Leaving this one normal, would be a right mess.
         """
         Displays information about the bot.
         """
@@ -82,7 +89,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True)
+    @info.command(invoke_without_command=True)
     async def prefix(self, ctx):
         """
         Shows the prefix or prefixes for the current server.
@@ -163,7 +170,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
             await ctx.bot.pool.execute("DELETE FROM prefixes WHERE guild_id = $1", ctx.guild.id)
             await ctx.send("Cleared the list of server prefixes.")
 
-    @commands.command()
+    @info.command()
     async def invite(self, ctx):
         """
         Displays my invite link.
@@ -171,7 +178,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
         embed = discord.Embed(title="Invite me to your server!", url=ctx.bot.invite_url, colour=ctx.bot.embed_colour)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["src"])
+    @info.command(aliases=["src"])
     async def source(self, ctx, *, command: str = None):
         """
         View my source code for a specific command.
@@ -206,7 +213,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
             colour=ctx.bot.embed_colour)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @info.command()
     async def stats(self, ctx):
         """
         Shows the command usage stats.
@@ -228,7 +235,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
 
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @info.command()
     async def support(self, ctx):
         """
         Displays my support server's invite link.
@@ -236,7 +243,7 @@ class BotInfo(commands.Cog, name="Bot Info"):
         embed = discord.Embed(title=f"Support Server Invite", url=ctx.bot.support_server_invite, colour=ctx.bot.embed_colour)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @info.command()
     async def vote(self, ctx):
         """
         Displays my vote link.
